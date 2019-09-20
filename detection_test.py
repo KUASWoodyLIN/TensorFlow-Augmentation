@@ -6,12 +6,12 @@ import matplotlib.pyplot as plt
 from detection import parse_aug_fn
 
 # Read Image
-img_string = tf.io.read_file('test/test_image.png')
+img_string = tf.io.read_file('test/test_detection_image.png')
 img = tf.image.decode_image(img_string)
 img = img.numpy()
 
 # Read Bounding box
-with open('test/test_label.txt', 'r') as file:
+with open('test/test_detection_label.txt', 'r') as file:
     lines = file.readlines()
     bboxes, labels = [], []
     for line in lines:
