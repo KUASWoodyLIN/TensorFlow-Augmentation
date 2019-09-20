@@ -17,6 +17,7 @@ with open('test/test_label.txt', 'r') as file:
     for line in lines:
         bboxes.append([float(box) for box in line.split()[:-1]])
         labels.append(line.split()[-1])
+classes_list = ['bottle', 'tvmonitor', 'person']
 
 # Draw Image and Bounding bix
 h, w, _ = img.shape
@@ -45,7 +46,7 @@ img_objects_ds = img_objects_ds.map(lambda dataset: parse_aug_fn(dataset, (416, 
 h, w = (416, 416)
 images = np.zeros((h * 4, w * 4, 3))
 for count, [img, bboxes, label] in enumerate(img_objects_ds.repeat().take(16)):
-    bboxes = tf.multiply(bboxes, [h, w, h, w])
+    bboxes = tf.multiply(bboxes, [h, w, h, w, 1])
     img = img.numpy()
     box_indices = tf.where(tf.reduce_sum(bboxes, axis=-1))
     bboxes = tf.gather_nd(bboxes, box_indices)
@@ -56,7 +57,7 @@ for count, [img, bboxes, label] in enumerate(img_objects_ds.repeat().take(16)):
         y2 = tf.cast(box[3], tf.int16).numpy()
         cv2.rectangle(img, (x1, y1), (x2, y2), (0, 1, 0), 2)
         cv2.putText(img,
-                    label,
+                    classes_list[box[4]],
                     (x1, y1 - 3),
                     cv2.FONT_HERSHEY_SIMPLEX,
                     1, (0, 1, 0), 2)

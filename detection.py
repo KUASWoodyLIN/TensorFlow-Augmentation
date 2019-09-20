@@ -13,26 +13,30 @@ def parse_aug_fn(dataset, input_size=(416, 416)):
     x = tf.cast(dataset['image'], tf.float32)
     # (y1, x1, y2, x2, class)
     bbox = dataset['objects']['bbox']
-    label = dataset['objects']['label']
+    label = tf.cast(dataset['objects']['label'], tf.float32)
 
     x, bbox = resize(x, bbox, input_size)
 
-    # Color Augmentation 75%
+    # 觸發顏色轉換機率50%
     x = tf.cond(tf.random.uniform([], 0, 1) > 0.75, lambda: color(x), lambda: x)
-    # Flip Image 50%
+    # 觸發影像翻轉機率50%
     x, bbox = tf.cond(tf.random.uniform([], 0, 1) > 0.5, lambda: flip(x, bbox), lambda: (x, bbox))
-    # Zoom Image 50%
+    # 觸發影像縮放機率50%
     x, bbox, label = tf.cond(tf.random.uniform([], 0, 1) > 0.5, lambda: zoom(x, bbox, label), lambda: (x, bbox, label))
-    # Rotate Image 50%
+    # 觸發影像旋轉機率50%
     x, bbox, label = tf.cond(tf.random.uniform([], 0, 1) > 0.5, lambda: rotate(x, bbox, label), lambda: (x, bbox, label))
 
     # normalization
     x = x / 255.
 
-    # list [x1, y1, x2, y2] -> tensor [y1, x1, y2, x2]
-    bbox = tf.stack([bbox[1], bbox[0], bbox[3], bbox[2]], axis=-1)
-    bbox = tf.divide(bbox, [ih, iw, ih, iw])
-    return x, bbox, label
+    # 將[x1, y1, x2, y2, classes]合為shape=(x, 5)的Tensor
+    y = tf.stack([bbox[1], bbox[0], bbox[3], bbox[2], label], axis=-1)
+    y = tf.divide(y, [ih, iw, ih, iw, 1])
+    # 擴充Bounding boxe數量到100個
+    paddings = [[0, 100 - tf.shape(y)[0]], [0, 0]]
+    y = tf.pad(y, paddings)
+    y = tf.ensure_shape(y, (100, 5))
+    return x, y
 
 
 def color(x):
@@ -171,7 +175,6 @@ def rotate(img, bboxes, label, angle=(-45, 45)):
                     label: return bounding boxes label
         """
     h, w, c = img.shape
-    print(img.shape)
     cx, cy = w // 2, h // 2
     angle = tf.random.uniform([], angle[0], angle[1], tf.float32)
 
