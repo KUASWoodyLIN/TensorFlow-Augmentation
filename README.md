@@ -2,7 +2,7 @@
 This repo provides a Augmentation using TensorFlow2.0 API.
 
 ## Key Features
-- [ ] Image classification
+- [x] Image classification
 - [x] Object detection
 - [ ] Image Segmentation
 
@@ -19,17 +19,26 @@ pip install -r requirements.txt
 - Matplotlib
 - OpenCV
 
-## object detection
+## Image classification
+- Color Augmentation
+- Flip Image
+- Zoom Image
+- Rotate Image
+```bash
+python classification_test.py
+```
+![](test/output_classification_image.png)
+
+
+## Object detection
 **Augmentation:**
 - Color Augmentation
 - Flip Image
 - Zoom Image
 - Rotate Image
 
-
 **Detection Augmentation Example:**
 ```bash
 python detection_test.py
 ```
-
-![](test/output_image.png)
+![](test/output_detection_image.png)
