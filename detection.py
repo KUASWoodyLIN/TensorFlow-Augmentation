@@ -10,7 +10,8 @@ def parse_aug_fn(dataset, input_size=(416, 416)):
     """
     ih, iw = input_size
     # (None, None, 3)
-    x = tf.cast(dataset['image'], tf.float32)
+    # x = tf.cast(dataset['image'], tf.float32)
+    x = dataset['image']
     # (y1, x1, y2, x2, class)
     bbox = dataset['objects']['bbox']
     label = tf.cast(dataset['objects']['label'], tf.float32)
@@ -27,6 +28,7 @@ def parse_aug_fn(dataset, input_size=(416, 416)):
     x, bbox, label = tf.cond(tf.random.uniform([], 0, 1) > 0.5, lambda: rotate(x, bbox, label), lambda: (x, bbox, label))
 
     # normalization
+    x = tf.clip_by_value(x, 0, 255)
     x = x / 255.
 
     # 將[x1, y1, x2, y2, classes]合為shape=(x, 5)的Tensor
