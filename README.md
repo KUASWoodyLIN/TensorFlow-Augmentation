@@ -27,8 +27,7 @@ pip install -r requirements.txt
 ```bash
 python classification_test.py
 ```
-![](test/output_classification_image.png)
-
+![](https://raw.githubusercontent.com/KUASWoodyLIN/TensorFlow-Augmentation/master/test/output_classification_image.png)
 
 ## Object detection
 **Augmentation:**
@@ -41,4 +40,6 @@ python classification_test.py
 ```bash
 python detection_test.py
 ```
-![](test/output_detection_image.png)
+![](https://raw.githubusercontent.com/KUASWoodyLIN/TensorFlow-Augmentation/master/test/output_detection_image.png)
+
+
