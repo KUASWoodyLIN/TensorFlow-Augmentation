@@ -5,7 +5,7 @@ from classification import parse_aug_fn
 
 
 # Read Image
-img_string = tf.io.read_file('test_classification_image.jpg')
+img_string = tf.io.read_file('./test/test_classification_image.jpg')
 img = tf.image.decode_image(img_string)
 img = img.numpy()
 
@@ -25,3 +25,4 @@ for count, [img, label] in enumerate(img_label_ds.repeat().take(16)):
     images[h * i:h * (i + 1), w * j:w * (j + 1)] = img
 plt.figure(figsize=(12, 12))
 plt.imshow(images)
+plt.show()

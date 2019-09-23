@@ -3,14 +3,14 @@ import tensorflow_addons as tfa
 import numpy as np
 
 
-@tf.function
+# @tf.function
 def parse_aug_fn(dataset, input_size=(416, 416), one_bot=False):
     """
     Image Augmentation function
     """
     ih, iw = input_size
     # (None, None, 3)
-    x = tf.cast(dataset['image'], tf.float32) / 255.
+    x = dataset['image']
     if one_bot:
         y = tf.one_hot(dataset['label'], 10)
     else:
@@ -26,6 +26,10 @@ def parse_aug_fn(dataset, input_size=(416, 416), one_bot=False):
     x = tf.cond(tf.random.uniform([], 0, 1) > 0.5, lambda: zoom(x), lambda: x)
     # 觸發影像旋轉機率50%
     x = tf.cond(tf.random.uniform([], 0, 1) > 0.5, lambda: rotate(x), lambda: x)
+
+    # normalization
+    x = tf.clip_by_value(x, 0, 255)
+    x = x / 255.
     return x, y
 
 
