@@ -1,5 +1,5 @@
-tensorflow==2.0.0rc1
-tensorflow-addons==0.5.0
+tensorflow>=2.6.0
+tensorflow-addons>=0.14.0
 opencv-python
 matplotlib
 numpy
